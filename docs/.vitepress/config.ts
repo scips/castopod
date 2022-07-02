@@ -67,99 +67,107 @@ export default defineConfig({
     },
   },
 
+  lastUpdated: true,
+
   themeConfig: {
     logo: "/images/castopod-icon.svg",
-    lastUpdated: "Last Updated",
-    repo: "https://code.castopod.org/adaures/castopod",
-    docsDir: "docs/src",
-    docsBranch: "develop",
-    editLinks: true,
-    locales: {
-      "/": {
-        label: "English",
-        selectText: "Languages",
-        repoLabel: "Source code",
-        nav: [
-          {
-            text: "Home",
-            link: "https://castopod.org/",
-          },
-          {
-            text: "Blog",
-            link: "https://blog.castopod.org/",
-          },
-          {
-            text: "Github",
-            link: "https://github.com/ad-aures/castopod",
-          },
-        ],
-        sidebar: {
-          "/": getGuideSidebarEn(),
-        },
-      },
-      "/fr/": {
-        label: "Français",
-        selectText: "Langues",
-        repoLabel: "Code source",
-        nav: [
-          {
-            text: "Accueil",
-            link: "https://castopod.org/",
-          },
-          {
-            text: "Blog",
-            link: "https://blog.castopod.org/",
-          },
-          {
-            text: "Github",
-            link: "https://github.com/ad-aures/castopod",
-          },
-        ],
-        sidebar: {
-          "/": getGuideSidebarFr(),
-        },
-      },
-      "/pt-BR/": {
-        label: "Português do Brasil",
-        selectText: "Línguas",
-        repoLabel: "Código fonte",
-        nav: [
-          {
-            text: "Início",
-            link: "https://castopod.org/",
-          },
-          {
-            text: "Blogue",
-            link: "https://blog.castopod.org/",
-          },
-          {
-            text: "Github",
-            link: "https://github.com/ad-aures/castopod",
-          },
-        ],
-        sidebar: { "/pt-BR/": getGuideSidebarPtBR() },
-      },
-      "/nn-NO/": {
-        label: "Norsk nynorsk",
-        selectText: "Språk",
-        repoLabel: "Kildekode",
-        nav: [
-          {
-            text: "Heim",
-            link: "https://castopod.org/",
-          },
-          {
-            text: "Blogg",
-            link: "https://blog.castopod.org/",
-          },
-          {
-            text: "Github",
-            link: "https://github.com/ad-aures/castopod",
-          },
-        ],
-        sidebar: { "/nn-NO/": getGuideSidebarNnNO() },
-      },
+    lastUpdatedText: "Last Updated",
+    socialLinks: [
+      { icon: "github", link: "https://github.com/ad-aures/castopod" },
+      { icon: "twitter", link: "https://twitter.com/castopod" },
+      { icon: "discord", link: "https://castopod.org/discord" },
+    ],
+    editLink: {
+      pattern:
+        "https://code.castopod.org/adaures/castopod/edit/develop/docs/src/:path",
     },
+    sidebar: getGuideSidebarEn(),
+    // locales: {
+    //   "/": {
+    //     label: "English",
+    //     selectText: "Languages",
+    //     repoLabel: "Source code",
+    //     nav: [
+    //       {
+    //         text: "Home",
+    //         link: "https://castopod.org/",
+    //       },
+    //       {
+    //         text: "Blog",
+    //         link: "https://blog.castopod.org/",
+    //       },
+    //       {
+    //         text: "Github",
+    //         link: "https://github.com/ad-aures/castopod",
+    //       },
+    //     ],
+    //     sidebar: {
+    //       "/": getGuideSidebarEn(),
+    //     },
+    //   },
+    //   "/fr/": {
+    //     label: "Français",
+    //     selectText: "Langues",
+    //     repoLabel: "Code source",
+    //     nav: [
+    //       {
+    //         text: "Accueil",
+    //         link: "https://castopod.org/",
+    //       },
+    //       {
+    //         text: "Blog",
+    //         link: "https://blog.castopod.org/",
+    //       },
+    //       {
+    //         text: "Github",
+    //         link: "https://github.com/ad-aures/castopod",
+    //       },
+    //     ],
+    //     sidebar: {
+    //       "/": getGuideSidebarFr(),
+    //     },
+    //   },
+    //   "/pt-BR/": {
+    //     label: "Português do Brasil",
+    //     selectText: "Línguas",
+    //     repoLabel: "Código fonte",
+    //     nav: [
+    //       {
+    //         text: "Início",
+    //         link: "https://castopod.org/",
+    //       },
+    //       {
+    //         text: "Blogue",
+    //         link: "https://blog.castopod.org/",
+    //       },
+    //       {
+    //         text: "Github",
+    //         link: "https://github.com/ad-aures/castopod",
+    //       },
+    //     ],
+    //     sidebar: { "/pt-BR/": getGuideSidebarPtBR() },
+    //   },
+    //   "/nn-NO/": {
+    //     label: "Norsk nynorsk",
+    //     selectText: "Språk",
+    //     repoLabel: "Kildekode",
+    //     nav: [
+    //       {
+    //         text: "Heim",
+    //         link: "https://castopod.org/",
+    //       },
+    //       {
+    //         text: "Blogg",
+    //         link: "https://blog.castopod.org/",
+    //       },
+    //       {
+    //         text: "Github",
+    //         link: "https://github.com/ad-aures/castopod",
+    //       },
+    //     ],
+    //     sidebar: { "/nn-NO/": getGuideSidebarNnNO() },
+    //   },
+    // },
   },
 });
 
@@ -167,11 +175,11 @@ function getGuideSidebarEn() {
   return [
     {
       text: "Introduction",
-      link: "/",
+      items: [{ text: "Welcome", link: "/" }],
     },
     {
       text: "Getting started",
-      children: [
+      items: [
         { text: "Install", link: "/getting-started/install" },
         { text: "Security", link: "/getting-started/security" },
         { text: "Update", link: "/getting-started/update" },
@@ -179,7 +187,7 @@ function getGuideSidebarEn() {
     },
     {
       text: "Contributing",
-      children: [
+      items: [
         { text: "Guide", link: "/contributing/guidelines" },
         { text: "Dev Setup", link: "/contributing/setup-development" },
       ],
