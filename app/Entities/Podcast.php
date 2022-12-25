@@ -10,12 +10,10 @@ declare(strict_types=1);
 
 namespace App\Entities;
 
-use App\Entities\Media\Image;
 use App\Libraries\SimpleRSSElement;
 use App\Models\ActorModel;
 use App\Models\CategoryModel;
 use App\Models\EpisodeModel;
-use App\Models\MediaModel;
 use App\Models\PersonModel;
 use App\Models\PlatformModel;
 use CodeIgniter\Entity\Entity;
@@ -30,6 +28,8 @@ use League\CommonMark\Extension\DisallowedRawHtml\DisallowedRawHtmlExtension;
 use League\CommonMark\Extension\SmartPunct\SmartPunctExtension;
 use League\CommonMark\MarkdownConverter;
 use Modules\Auth\Models\UserModel;
+use Modules\Media\Entities\Image;
+use Modules\Media\Models\MediaModel;
 use Modules\PremiumPodcasts\Entities\Subscription;
 use Modules\PremiumPodcasts\Models\SubscriptionModel;
 use RuntimeException;

@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace App\Entities\Clip;
 
-use App\Entities\Media\Video;
-use App\Models\MediaModel;
 use CodeIgniter\Files\File;
+use Modules\Media\Entities\Video;
+use Modules\Media\Models\MediaModel;
 
 /**
  * @property array $theme

@@ -17,12 +17,12 @@ use App\Entities\Podcast;
 use App\Entities\Post;
 use App\Models\EpisodeCommentModel;
 use App\Models\EpisodeModel;
-use App\Models\MediaModel;
 use App\Models\PodcastModel;
 use App\Models\PostModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\I18n\Time;
+use Modules\Media\Models\MediaModel;
 
 class EpisodeController extends BaseController
 {

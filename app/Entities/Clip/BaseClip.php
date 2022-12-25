@@ -11,17 +11,17 @@ declare(strict_types=1);
 namespace App\Entities\Clip;
 
 use App\Entities\Episode;
-use App\Entities\Media\Audio;
-use App\Entities\Media\Video;
 use App\Entities\Podcast;
 use App\Models\EpisodeModel;
-use App\Models\MediaModel;
 use App\Models\PodcastModel;
 use CodeIgniter\Entity\Entity;
 use CodeIgniter\Files\File;
 use CodeIgniter\I18n\Time;
 use CodeIgniter\Shield\Entities\User;
 use Modules\Auth\Models\UserModel;
+use Modules\Media\Entities\Audio;
+use Modules\Media\Entities\Video;
+use Modules\Media\Models\MediaModel;
 
 /**
  * @property int $id

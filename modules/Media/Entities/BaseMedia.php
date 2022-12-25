@@ -8,12 +8,12 @@ declare(strict_types=1);
  * @link       https://castopod.org/
  */
 
-namespace App\Entities\Media;
+namespace Modules\Media\Entities;
 
-use App\Models\MediaModel;
 use CodeIgniter\Database\BaseResult;
 use CodeIgniter\Entity\Entity;
 use CodeIgniter\Files\File;
+use Modules\Media\Models\MediaModel;
 
 /**
  * @property int $id

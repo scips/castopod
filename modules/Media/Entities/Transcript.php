@@ -8,10 +8,10 @@ declare(strict_types=1);
  * @link       https://castopod.org/
  */
 
-namespace App\Entities\Media;
+namespace Modules\Media\Entities;
 
-use App\Libraries\TranscriptParser;
 use CodeIgniter\Files\File;
+use Media\TranscriptParser;
 
 class Transcript extends BaseMedia
 {

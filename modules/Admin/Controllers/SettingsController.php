@@ -13,12 +13,12 @@ namespace Modules\Admin\Controllers;
 use App\Models\ActorModel;
 use App\Models\EpisodeCommentModel;
 use App\Models\EpisodeModel;
-use App\Models\MediaModel;
 use App\Models\PersonModel;
 use App\Models\PodcastModel;
 use App\Models\PostModel;
 use CodeIgniter\Files\File;
 use CodeIgniter\HTTP\RedirectResponse;
+use Modules\Media\Models\MediaModel;
 use PHP_ICO;
 
 class SettingsController extends BaseController

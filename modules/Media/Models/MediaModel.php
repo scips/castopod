@@ -8,18 +8,18 @@ declare(strict_types=1);
  * @link       https://castopod.org/
  */
 
-namespace App\Models;
+namespace Modules\Media\Models;
 
-use App\Entities\Media\Audio;
-use App\Entities\Media\Chapters;
-use App\Entities\Media\Document;
-use App\Entities\Media\Image;
-use App\Entities\Media\Transcript;
-use App\Entities\Media\Video;
 use CodeIgniter\Database\BaseResult;
 use CodeIgniter\Database\ConnectionInterface;
 use CodeIgniter\Model;
 use CodeIgniter\Validation\ValidationInterface;
+use Modules\Media\Entities\Audio;
+use Modules\Media\Entities\Chapters;
+use Modules\Media\Entities\Document;
+use Modules\Media\Entities\Image;
+use Modules\Media\Entities\Transcript;
+use Modules\Media\Entities\Video;
 
 class MediaModel extends Model
 {

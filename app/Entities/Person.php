@@ -10,12 +10,12 @@ declare(strict_types=1);
 
 namespace App\Entities;
 
-use App\Entities\Media\Image;
-use App\Models\MediaModel;
 use App\Models\PersonModel;
 use CodeIgniter\Entity\Entity;
 use CodeIgniter\Files\File;
 use CodeIgniter\HTTP\Files\UploadedFile;
+use Modules\Media\Entities\Image;
+use Modules\Media\Models\MediaModel;
 use RuntimeException;
 
 /**

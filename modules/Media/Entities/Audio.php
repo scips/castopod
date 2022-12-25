@@ -8,7 +8,7 @@ declare(strict_types=1);
  * @link       https://castopod.org/
  */
 
-namespace App\Entities\Media;
+namespace Modules\Media\Entities;
 
 use CodeIgniter\Files\File;
 use JamesHeinrich\GetID3\GetID3;

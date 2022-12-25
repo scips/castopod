@@ -11,14 +11,9 @@ declare(strict_types=1);
 namespace App\Entities;
 
 use App\Entities\Clip\Soundbite;
-use App\Entities\Media\Audio;
-use App\Entities\Media\Chapters;
-use App\Entities\Media\Image;
-use App\Entities\Media\Transcript;
 use App\Libraries\SimpleRSSElement;
 use App\Models\ClipModel;
 use App\Models\EpisodeCommentModel;
-use App\Models\MediaModel;
 use App\Models\PersonModel;
 use App\Models\PodcastModel;
 use App\Models\PostModel;
@@ -32,6 +27,11 @@ use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
 use League\CommonMark\Extension\DisallowedRawHtml\DisallowedRawHtmlExtension;
 use League\CommonMark\Extension\SmartPunct\SmartPunctExtension;
 use League\CommonMark\MarkdownConverter;
+use Modules\Media\Entities\Audio;
+use Modules\Media\Entities\Chapters;
+use Modules\Media\Entities\Image;
+use Modules\Media\Entities\Transcript;
+use Modules\Media\Models\MediaModel;
 use RuntimeException;
 
 /**

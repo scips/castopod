@@ -9,38 +9,9 @@ declare(strict_types=1);
  */
 
 use CodeIgniter\Files\File;
-use CodeIgniter\HTTP\Files\UploadedFile;
 use CodeIgniter\HTTP\ResponseInterface;
 use Config\Mimes;
 use Config\Services;
-
-if (! function_exists('save_media')) {
-    /**
-     * Saves a file to the corresponding podcast folder in `public/media`
-     */
-    function save_media(File | UploadedFile $file, string $folder = '', string $filename = null): string
-    {
-        if (($extension = $file->getExtension()) !== '') {
-            $filename = $filename . '.' . $extension;
-        }
-
-        $mediaRoot = config('App')
-            ->mediaRoot . '/' . $folder;
-
-        if (! file_exists($mediaRoot)) {
-            mkdir($mediaRoot, 0777, true);
-        }
-
-        if (! file_exists($mediaRoot . '/index.html')) {
-            touch($mediaRoot . '/index.html');
-        }
-
-        // move to media folder, overwrite file if already existing
-        $file->move($mediaRoot . '/', $filename, true);
-
-        return $folder . '/' . $filename;
-    }
-}
 
 if (! function_exists('download_file')) {
     function download_file(string $fileUrl, string $mimetype = ''): File

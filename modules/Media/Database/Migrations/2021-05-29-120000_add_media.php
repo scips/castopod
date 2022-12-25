@@ -8,7 +8,7 @@ declare(strict_types=1);
  * @link       https://castopod.org/
  */
 
-namespace App\Database\Migrations;
+namespace Media\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
