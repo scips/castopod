@@ -21,17 +21,12 @@ class Media extends BaseConfig
     ];
 
     public array $s3 = [
-        'bucket' => '',
         'key' => '',
         'secret' => '',
         'region' => '',
         'protocol' => '',
-        'hostname' => '',
         'endpoint' => '',
-        'signature_version' => '',
-        'override_path_style' => '',
-        'open_timeout' => '',
-        'read_timeout' => '',
-        'force_single_request' => false,
+        'debug' => false,
+        'path_style_endpoint' => false,
     ];
 }

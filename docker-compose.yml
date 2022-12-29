@@ -61,6 +61,20 @@ services:
     networks:
       - castopod
 
+  s3:
+    image: adobe/s3mock:latest
+    container_name: castopod_s3
+    environment:
+      - debug=true
+      - initialBuckets=default
+      - root=/data
+    ports:
+      - 9090:9090
+    volumes:
+      - ./data/s3:/data:cached
+    networks:
+      - castopod
+
 volumes:
   redis:
   mariadb:

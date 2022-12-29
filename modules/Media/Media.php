@@ -1,14 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Media;
 
 use CodeIgniter\Files\File;
 use Config\Media as MediaConfig;
-use Modules\Media\Handlers\FilesystemHandler;
 use Modules\Media\Handlers\MediaHandlerInterface;
 
-class Media {
-
+class Media
+{
     protected MediaHandlerInterface $handler;
 
     protected MediaConfig $config;
@@ -20,7 +21,8 @@ class Media {
         $this->handler = new $handlerClass();
     }
 
-    public function save(File $file) {
-        return $this->handler->save()
+    public function save(File $file)
+    {
+        return $this->handler->save($file, '', '');
     }
 }
