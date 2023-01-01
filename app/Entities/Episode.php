@@ -191,14 +191,12 @@ class Episode extends Entity
             (new MediaModel('image'))->updateMedia($this->getCover());
         } else {
             $cover = new Image([
-                'file_name' => $this->attributes['slug'],
-                'file_directory' => 'podcasts/' . $this->getPodcast()->handle,
                 'sizes' => config('Images')
                     ->podcastCoverSizes,
                 'uploaded_by' => user_id(),
                 'updated_by' => user_id(),
             ]);
-            $cover->setFile($file);
+            $cover->setFile($file, 'podcasts/' . $this->getPodcast()->handle . '/' . $this->attributes['slug']);
 
             $this->attributes['cover_id'] = (new MediaModel('image'))->saveMedia($cover);
         }
@@ -238,14 +236,15 @@ class Episode extends Entity
             (new MediaModel('audio'))->updateMedia($this->getAudio());
         } else {
             $audio = new Audio([
-                'file_name' => pathinfo($file->getRandomName(), PATHINFO_FILENAME),
-                'file_directory' => 'podcasts/' . $this->getPodcast()->handle,
                 'language_code' => $this->getPodcast()
                     ->language_code,
                 'uploaded_by' => user_id(),
                 'updated_by' => user_id(),
             ]);
-            $audio->setFile($file);
+            $audio->setFile(
+                $file,
+                'podcasts/' . $this->getPodcast()->handle . '/' . pathinfo($file->getRandomName(), PATHINFO_FILENAME)
+            );
 
             $this->attributes['audio_id'] = (new MediaModel())->saveMedia($audio);
         }

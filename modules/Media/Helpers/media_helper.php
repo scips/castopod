@@ -57,10 +57,10 @@ if (! function_exists('download_file')) {
             bin2hex(random_bytes(10)) .
             '.' .
             $extension;
-        $tmpFilePath = WRITEPATH . 'uploads/' . $tmpFilename;
-        file_put_contents($tmpFilePath, $response->getBody());
+        $tmpfileKey = WRITEPATH . 'uploads/' . $tmpFilename;
+        file_put_contents($tmpfileKey, $response->getBody());
 
-        return new File($tmpFilePath);
+        return new File($tmpfileKey);
     }
 }
 
@@ -79,32 +79,6 @@ if (! function_exists('media_path')) {
 
         $uri = trim($uri, '/');
 
-        return config('App')->mediaRoot . '/' . $uri;
-    }
-}
-
-if (! function_exists('media_base_url')) {
-    /**
-     * Return the media base URL to use in views
-     *
-     * @param  string|string[] $uri URI string or array of URI segments
-     */
-    function media_base_url(string | array $uri = ''): string
-    {
-        // convert segment array to string
-        if (is_array($uri)) {
-            $uri = implode('/', $uri);
-        }
-
-        $uri = trim($uri, '/');
-
-        $appConfig = config('App');
-        $mediaBaseUrl = $appConfig->mediaBaseURL === '' ? $appConfig->baseURL : $appConfig->mediaBaseURL;
-
-        return rtrim((string) $mediaBaseUrl, '/') .
-            '/' .
-            $appConfig->mediaRoot .
-            '/' .
-            $uri;
+        return config('Media')->root . '/' . $uri;
     }
 }

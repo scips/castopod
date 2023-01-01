@@ -70,14 +70,12 @@ class Person extends Entity
             (new MediaModel('image'))->updateMedia($this->getAvatar());
         } else {
             $avatar = new Image([
-                'file_name' => $this->attributes['unique_name'],
-                'file_directory' => 'persons',
                 'sizes' => config('Images')
                     ->personAvatarSizes,
                 'uploaded_by' => user_id(),
                 'updated_by' => user_id(),
             ]);
-            $avatar->setFile($file);
+            $avatar->setFile($file, 'persons/' . $this->attributes['unique_name']);
 
             $this->attributes['avatar_id'] = (new MediaModel('image'))->saveMedia($avatar);
         }
@@ -90,7 +88,7 @@ class Person extends Entity
         if ($this->attributes['avatar_id'] === null) {
             helper('media');
             return new Image([
-                'file_path' => config('Images')
+                'file_key' => config('Images')
                     ->avatarDefaultPath,
                 'file_mimetype' => config('Images')
                     ->avatarDefaultMimeType,

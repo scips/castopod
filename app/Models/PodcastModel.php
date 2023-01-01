@@ -443,7 +443,7 @@ class PodcastModel extends Model
                 $podcastActor->avatar_image_url = $podcast->cover->thumbnail_url;
                 $podcastActor->avatar_image_mimetype = $podcast->cover->thumbnail_mimetype;
 
-                (new ActorModel())->update($podcast->actor_id, $podcastActor);
+                // (new ActorModel())->update($podcast->actor_id, $podcastActor);
             }
         }
 

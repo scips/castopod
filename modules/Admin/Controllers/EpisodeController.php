@@ -933,7 +933,7 @@ class EpisodeController extends BaseController
             if ($episodeMedia !== null && ! $episodeMedia->deleteFile()) {
                 $warnings[] = lang('Episode.messages.deleteFileError', [
                     'type' => $episodeMedia->type,
-                    'file_path' => $episodeMedia->file_path,
+                    'file_key' => $episodeMedia->file_key,
                 ]);
             }
         }

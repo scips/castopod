@@ -63,9 +63,9 @@ class VideoClip extends BaseClip
         return $this;
     }
 
-    public function setMedia(string $filePath = null): static
+    public function setMedia(string $fileKey = null): static
     {
-        if ($filePath === null) {
+        if ($fileKey === null) {
             return $this;
         }
 
@@ -75,10 +75,10 @@ class VideoClip extends BaseClip
         }
 
         helper('media');
-        $file = new File(media_path($filePath));
+        $file = new File(media_path($fileKey));
 
         $video = new Video([
-            'file_path' => $filePath,
+            'file_key' => $fileKey,
             'language_code' => $this->getPodcast()
                 ->language_code,
             'uploaded_by' => $this->attributes['created_by'],

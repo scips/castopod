@@ -23,13 +23,13 @@ if (! function_exists('write_audio_file_tags')) {
 
         // Initialize getID3 tag-writing module
         $tagwriter = new WriteTags();
-        $tagwriter->filename = media_path($episode->audio->file_path);
+        $tagwriter->filename = media_path($episode->audio->file_key);
 
         // set various options (optional)
         $tagwriter->tagformats = ['id3v2.4'];
         $tagwriter->tag_encoding = $TextEncoding;
 
-        $APICdata = file_get_contents(media_path($episode->cover->id3_path));
+        $APICdata = file_get_contents(media_path($episode->cover->id3_key));
 
         // TODO: variables used for podcast specific tags
         // $podcastUrl = $episode->podcast->link;

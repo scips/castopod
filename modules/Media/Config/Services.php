@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Config;
+namespace Modules\Media\Config;
 
 use CodeIgniter\Config\BaseService;
-use Modules\Media\Media;
+use Exception;
+use Modules\Media\Config\Media as MediaConfig;
+use Modules\Media\FileManagers\FileManagerInterface;
 
 /**
  * Services Configuration file.
@@ -19,12 +21,22 @@ use Modules\Media\Media;
  */
 class Services extends BaseService
 {
-    public static function media(bool $getShared = true): Media
+    public static function file_manager(bool $getShared = true): FileManagerInterface
     {
         if ($getShared) {
-            return self::getSharedInstance('media');
+            return self::getSharedInstance('file_manager');
         }
 
-        return new Media();
+        /** @var MediaConfig * */
+        $config = config('Media');
+        $fileManagerClass = $config->fileManagers[$config->fileManager];
+
+        $fileManager = new $fileManagerClass($config);
+
+        if ($fileManager instanceof FileManagerInterface) {
+            return $fileManager;
+        }
+
+        throw new Exception('File Manager service must extend FileManagerInterface');
     }
 }

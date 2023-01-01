@@ -15,6 +15,7 @@ use CodeIgniter\Database\ConnectionInterface;
 use CodeIgniter\Model;
 use CodeIgniter\Validation\ValidationInterface;
 use Modules\Media\Entities\Audio;
+use Modules\Media\Entities\BaseMedia;
 use Modules\Media\Entities\Chapters;
 use Modules\Media\Entities\Document;
 use Modules\Media\Entities\Image;
@@ -52,7 +53,7 @@ class MediaModel extends Model
      */
     protected $allowedFields = [
         'id',
-        'file_path',
+        'file_key',
         'file_size',
         'file_mimetype',
         'file_metadata',
@@ -166,9 +167,9 @@ class MediaModel extends Model
         return $result;
     }
 
-    public function deleteMedia(object $media): bool|BaseResult
+    public function deleteMedia(BaseMedia $media): bool|BaseResult
     {
-        $media->deleteFile();
+        service('file_handler')->delete($media->file_key);
 
         return $this->delete($media->id);
     }

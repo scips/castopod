@@ -35,7 +35,7 @@ class VideoClipper
 
     public bool $error = false;
 
-    public string $videoClipFilePath;
+    public string $videoClipfileKey;
 
     protected string $videoClipOutput;
 
@@ -85,13 +85,13 @@ class VideoClipper
 
         helper(['media']);
 
-        $this->audioInput = media_path($this->episode->audio->file_path);
-        $this->episodeCoverPath = media_path($this->episode->cover->file_path);
+        $this->audioInput = media_path($this->episode->audio->file_key);
+        $this->episodeCoverPath = media_path($this->episode->cover->file_key);
 
         $podcastFolder = media_path("podcasts/{$this->episode->podcast->handle}");
 
         $this->videoClipOutput = $podcastFolder . "/{$this->episode->slug}-clip-{$this->start}-to-{$this->end}-{$this->format}-{$this->theme}.mp4";
-        $this->videoClipFilePath = "podcasts/{$this->episode->podcast->handle}/{$this->episode->slug}-clip-{$this->start}-to-{$this->end}-{$this->format}-{$this->theme}.mp4";
+        $this->videoClipfileKey = "podcasts/{$this->episode->podcast->handle}/{$this->episode->slug}-clip-{$this->start}-to-{$this->end}-{$this->format}-{$this->theme}.mp4";
 
         // Temporary files to generate clip
         $tempFile = tempnam(WRITEPATH . 'temp', "{$this->episode->slug}-{$this->start}-{$this->end}");
@@ -123,7 +123,7 @@ class VideoClipper
         if ($this->episode->transcript->json_path) {
             $this->generateSubtitlesClipFromJson($this->episode->transcript->json_path);
         } else {
-            $subtitlesInput = media_path($this->episode->transcript->file_path);
+            $subtitlesInput = media_path($this->episode->transcript->file_key);
             $subtitleClipCmd = "ffmpeg -y -i {$subtitlesInput} -ss {$this->start} -t {$this->duration} {$this->subtitlesClipOutput}";
             exec($subtitleClipCmd);
         }

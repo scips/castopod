@@ -214,53 +214,53 @@ class SettingsController extends BaseController
 
             $allImages = (new MediaModel('image'))->getAllOfType();
             foreach ($allImages as $image) {
-                if (str_starts_with((string) $image->file_path, 'podcasts')) {
-                    if (str_ends_with((string) $image->file_path, 'banner.jpg') || str_ends_with(
-                        (string) $image->file_path,
+                if (str_starts_with((string) $image->file_key, 'podcasts')) {
+                    if (str_ends_with((string) $image->file_key, 'banner.jpg') || str_ends_with(
+                        (string) $image->file_key,
                         'banner.png'
-                    ) || str_ends_with((string) $image->file_path, 'banner.jpeg')) {
+                    ) || str_ends_with((string) $image->file_key, 'banner.jpeg')) {
                         $image->sizes = config('Images')
                             ->podcastBannerSizes;
                     } else {
                         $image->sizes = config('Images')
                             ->podcastCoverSizes;
                     }
-                } elseif (str_starts_with((string) $image->file_path, 'persons')) {
+                } elseif (str_starts_with((string) $image->file_key, 'persons')) {
                     $image->sizes = config('Images')
                         ->personAvatarSizes;
                 } else {
                     $image->sizes = [];
                 }
 
-                $image->setFile(new File(media_path($image->file_path)));
+                $image->setFile(new File(media_path($image->file_key)));
 
                 (new MediaModel('image'))->updateMedia($image);
             }
 
             $allAudio = (new MediaModel('audio'))->getAllOfType();
             foreach ($allAudio as $audio) {
-                $audio->setFile(new File(media_path($audio->file_path)));
+                $audio->setFile(new File(media_path($audio->file_key)));
 
                 (new MediaModel('audio'))->updateMedia($audio);
             }
 
             $allTranscripts = (new MediaModel('transcript'))->getAllOfType();
             foreach ($allTranscripts as $transcript) {
-                $transcript->setFile(new File(media_path($transcript->file_path)));
+                $transcript->setFile(new File(media_path($transcript->file_key)));
 
                 (new MediaModel('transcript'))->updateMedia($transcript);
             }
 
             $allChapters = (new MediaModel('chapters'))->getAllOfType();
             foreach ($allChapters as $chapters) {
-                $chapters->setFile(new File(media_path($chapters->file_path)));
+                $chapters->setFile(new File(media_path($chapters->file_key)));
 
                 (new MediaModel('chapters'))->updateMedia($chapters);
             }
 
             $allVideos = (new MediaModel('video'))->getAllOfType();
             foreach ($allVideos as $video) {
-                $video->setFile(new File(media_path($video->file_path)));
+                $video->setFile(new File(media_path($video->file_key)));
 
                 (new MediaModel('video'))->updateMedia($video);
             }

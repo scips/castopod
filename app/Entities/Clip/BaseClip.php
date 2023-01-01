@@ -122,13 +122,13 @@ class BaseClip extends Entity
         return (new UserModel())->find($this->created_by);
     }
 
-    public function setMedia(string $filePath = null): static
+    public function setMedia(string $fileKey = null): static
     {
-        if ($filePath === null) {
+        if ($fileKey === null) {
             return $this;
         }
 
-        $file = new File($filePath);
+        $file = new File($fileKey);
 
         if ($this->media_id !== null) {
             $this->getMedia()
@@ -138,7 +138,7 @@ class BaseClip extends Entity
             (new MediaModel('audio'))->updateMedia($this->getMedia());
         } else {
             $media = new Audio([
-                'file_path' => $filePath,
+                'file_key' => $fileKey,
                 'language_code' => $this->getPodcast()
                     ->language_code,
                 'uploaded_by' => $this->attributes['created_by'],

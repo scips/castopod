@@ -243,14 +243,12 @@ class Podcast extends Entity
             (new MediaModel('image'))->updateMedia($this->getCover());
         } else {
             $cover = new Image([
-                'file_name' => 'cover',
-                'file_directory' => 'podcasts/' . $this->attributes['handle'],
                 'sizes' => config('Images')
                     ->podcastCoverSizes,
                 'uploaded_by' => user_id(),
                 'updated_by' => user_id(),
             ]);
-            $cover->setFile($file);
+            $cover->setFile($file, 'podcasts/' . $this->attributes['handle'] . '/cover');
 
             $this->attributes['cover_id'] = (new MediaModel('image'))->saveMedia($cover);
         }
@@ -281,14 +279,12 @@ class Podcast extends Entity
             (new MediaModel('image'))->updateMedia($this->getBanner());
         } else {
             $banner = new Image([
-                'file_name' => 'banner',
-                'file_directory' => 'podcasts/' . $this->attributes['handle'],
                 'sizes' => config('Images')
                     ->podcastBannerSizes,
                 'uploaded_by' => user_id(),
                 'updated_by' => user_id(),
             ]);
-            $banner->setFile($file);
+            $banner->setFile($file, 'podcasts/' . $this->attributes['handle'] . '/banner');
 
             $this->attributes['banner_id'] = (new MediaModel('image'))->saveMedia($banner);
         }
@@ -304,7 +300,7 @@ class Podcast extends Entity
                     'Images'
                 )->podcastBannerDefaultPaths['default'];
             return new Image([
-                'file_path' => $defaultBanner['path'],
+                'file_key' => $defaultBanner['path'],
                 'file_mimetype' => $defaultBanner['mimetype'],
                 'file_size' => 0,
                 'file_metadata' => [

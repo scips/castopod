@@ -25,11 +25,12 @@ class Transcript extends BaseMedia
     {
         parent::initFileProperties();
 
-        if ($this->file_path && $this->file_metadata && array_key_exists('json_path', $this->file_metadata)) {
+        if ($this->file_key && $this->file_metadata && array_key_exists('json_path', $this->file_metadata)) {
             helper('media');
 
             $this->json_path = media_path($this->file_metadata['json_path']);
-            $this->json_url = media_base_url($this->file_metadata['json_path']);
+            $this->json_url = service('media')
+                ->getFileUrl($this->file_metadata['json_path']);
         }
     }
 
@@ -37,7 +38,7 @@ class Transcript extends BaseMedia
     {
         parent::setFile($file);
 
-        $content = file_get_contents(media_path($this->attributes['file_path']));
+        $content = file_get_contents(media_path($this->attributes['file_key']));
 
         if ($content === false) {
             return $this;
@@ -49,13 +50,13 @@ class Transcript extends BaseMedia
         }
 
         $transcriptParser = new TranscriptParser();
-        $jsonFilePath = $this->attributes['file_directory'] . '/' . $this->attributes['file_name'] . '.json';
+        $jsonfileKey = $this->attributes['file_directory'] . '/' . $this->attributes['file_name'] . '.json';
         if (($transcriptJson = $transcriptParser->loadString($content)->parseSrt()) && file_put_contents(
-            media_path($jsonFilePath),
+            media_path($jsonfileKey),
             $transcriptJson
         )) {
             // set metadata (generated json file path)
-            $metadata['json_path'] = $jsonFilePath;
+            $metadata['json_path'] = $jsonfileKey;
         }
 
         $this->attributes['file_metadata'] = json_encode($metadata, JSON_INVALID_UTF8_IGNORE);
