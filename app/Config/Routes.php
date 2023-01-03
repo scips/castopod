@@ -66,6 +66,11 @@ $routes->get('/', 'HomeController', [
     'as' => 'home',
 ]);
 
+$routes->get('/testings3', 'HomeController::testings3', [
+    'as' => 'testings3',
+]);
+$routes->post('/testings3', 'HomeController::testings3Action');
+
 $routes->get('.well-known/platforms', 'Platform');
 
 // Podcast's Public routes

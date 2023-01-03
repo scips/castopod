@@ -13,6 +13,8 @@ namespace App\Controllers;
 use App\Models\PodcastModel;
 use CodeIgniter\HTTP\RedirectResponse;
 use Config\Services;
+use Modules\Media\Entities\Image;
+use Modules\Media\Models\MediaModel;
 
 class HomeController extends BaseController
 {
@@ -47,5 +49,29 @@ class HomeController extends BaseController
         ];
 
         return view('home', $data);
+    }
+
+    public function testings3(): string
+    {
+        return view('testings3');
+    }
+
+    public function testings3Action(): RedirectResponse
+    {
+        $file = $this->request->getFile('filo');
+
+        $image = new Image([
+            'file_key' => 'hello/testing.jpg',
+            'sizes' => config('Images')
+                ->podcastCoverSizes,
+            'uploaded_by' => 1,
+            'updated_by' => 1,
+        ]);
+
+        $image->setFile($file, 'hello/testing');
+
+        $imageId = (new MediaModel('Image'))->save($image);
+
+        return redirect()->back();
     }
 }

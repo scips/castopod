@@ -85,15 +85,14 @@ class Image extends BaseMedia
         $imageService = Services::image();
         foreach ($this->sizes as $name => $size) {
             $fileName = $file->getRandomName();
+            // dd($fileName, $file->getRealPath());
             $pathProperty = $name . '_key';
             $imageService
                 ->withFile($file->getRealPath())
                 ->resize($size['width'], $size['height'])
-                ->save($fileName);
+                ->save(WRITEPATH . 'uploads/' . $fileName);
 
             $newImage = new File(WRITEPATH . 'uploads/' . $fileName, true);
-
-            dd($newImage->getRealPath());
 
             service('file_manager')
                 ->save($newImage, $this->{$pathProperty});

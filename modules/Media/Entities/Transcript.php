@@ -44,10 +44,7 @@ class Transcript extends BaseMedia
             return $this;
         }
 
-        $metadata = [];
-        if ($fileMetadata = lstat((string) $file)) {
-            $metadata = $fileMetadata;
-        }
+        $metadata = lstat((string) $file) ?? [];
 
         $transcriptParser = new TranscriptParser();
         $jsonfileKey = $this->attributes['file_directory'] . '/' . $this->attributes['file_name'] . '.json';
