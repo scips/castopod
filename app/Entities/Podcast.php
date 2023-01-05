@@ -237,7 +237,7 @@ class Podcast extends Entity
 
         if (array_key_exists('cover_id', $this->attributes) && $this->attributes['cover_id'] !== null) {
             $this->getCover()
-                ->setFile($file);
+                ->setMediaAttributes($file);
             $this->getCover()
                 ->updated_by = (int) user_id();
             (new MediaModel('image'))->updateMedia($this->getCover());
@@ -248,7 +248,7 @@ class Podcast extends Entity
                 'uploaded_by' => user_id(),
                 'updated_by' => user_id(),
             ]);
-            $cover->setFile($file, 'podcasts/' . $this->attributes['handle'] . '/cover');
+            $cover->setMediaAttributes($file, 'podcasts/' . $this->attributes['handle'] . '/cover');
 
             $this->attributes['cover_id'] = (new MediaModel('image'))->saveMedia($cover);
         }
@@ -273,18 +273,19 @@ class Podcast extends Entity
 
         if (array_key_exists('banner_id', $this->attributes) && $this->attributes['banner_id'] !== null) {
             $this->getBanner()
-                ->setFile($file);
+                ->setMediaAttributes($file);
             $this->getBanner()
                 ->updated_by = (int) user_id();
             (new MediaModel('image'))->updateMedia($this->getBanner());
         } else {
             $banner = new Image([
+                'file' => $file,
+                'file_key' => 'podcasts/' . $this->attributes['handle'] . '/banner',
                 'sizes' => config('Images')
                     ->podcastBannerSizes,
                 'uploaded_by' => user_id(),
                 'updated_by' => user_id(),
             ]);
-            $banner->setFile($file, 'podcasts/' . $this->attributes['handle'] . '/banner');
 
             $this->attributes['banner_id'] = (new MediaModel('image'))->saveMedia($banner);
         }

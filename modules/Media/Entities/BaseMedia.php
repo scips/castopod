@@ -59,41 +59,35 @@ class BaseMedia extends Entity
      */
     public function __construct(array $data = null)
     {
+        $data['file_url'] = service('file_manager')->getUrl($data['file_key']);
+
         parent::__construct($data);
-
-        $this->initFileProperties();
     }
 
-    public function initFileProperties(): void
-    {
-        if ($this->file_key !== '') {
-            helper('media');
-
-            [
-                'filename' => $filename,
-                'dirname' => $dirname,
-                'extension' => $extension,
-            ] = pathinfo($this->file_key);
-
-            $this->attributes['file_url'] = service('file_manager')->getUrl($this->file_key);
-            $this->attributes['file_name'] = $filename;
-            $this->attributes['file_directory'] = $dirname;
-            $this->attributes['file_extension'] = $extension;
-        }
-    }
-
-    public function setFile(File $file, ?string $key = null): self
+    public function setFile(File $file): self
     {
         $this->attributes['type'] = $this->type;
         $this->attributes['file_mimetype'] = $file->getMimeType();
         $this->attributes['file_metadata'] = json_encode(lstat((string) $file), JSON_INVALID_UTF8_IGNORE);
-        $this->attributes['file_key'] = service('file_manager')->save($file, $key);
 
-        if ($filesize = service('file_manager')->getRealSize($this->file_key)) {
+        if ($filesize = $file->getSize()) {
             $this->attributes['file_size'] = $filesize;
         }
 
+        $this->attributes['file'] = $file;
+
         return $this;
+    }
+
+    public function saveFile(): bool
+    {
+        if (! $this->attributes['file'] || ! $this->file_key) {
+            return false;
+        }
+
+        $this->attributes['file_key'] = service('file_manager')->save($this->attributes['file'], $this->file_key);
+
+        return true;
     }
 
     public function deleteFile(): bool

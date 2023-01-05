@@ -20,38 +20,49 @@ class Image extends BaseMedia
 {
     protected string $type = 'image';
 
-    public function initFileProperties(): void
-    {
-        parent::initFileProperties();
+    /**
+     * @var array<string, array<string, int|string>>
+     */
+    protected array $sizes = [];
 
-        if ($this->file_key && $this->sizes) {
+    public function __construct(?array $data = null)
+    {
+        parent::__construct($data);
+
+        // dd($this->file_key, $this->sizes, $this->attributes, $data);
+
+        if ($this->file_key && $this->attributes['sizes']) {
             $this->initSizeProperties();
         }
     }
 
     public function initSizeProperties(): bool
     {
-        helper('media');
+        helper('filesystem');
 
-        foreach ($this->sizes as $name => $size) {
-            $extension = array_key_exists('extension', $size) ? $size['extension'] : $this->file_extension;
+        $fileKeyWithoutExt = path_without_ext($this->file_key);
+
+        foreach ($this->attributes['sizes'] as $name => $size) {
+            $extension = array_key_exists(
+                'extension',
+                $size
+            ) ? $size['extension'] : $this->attributes['file']->getExtension();
             $mimetype = array_key_exists('mimetype', $size) ? $size['mimetype'] : $this->file_mimetype;
-            $this->{$name . '_key'} = $this->file_directory . '/' . $this->file_name . '_' . $name . '.' . $extension;
-            $this->{$name . '_url'} = service('file_manager')->getUrl($this->{$name . '_key'});
-            $this->{$name . '_mimetype'} = $mimetype;
+
+            $this->attributes[$name . '_key'] = $fileKeyWithoutExt . '_' . $name . '.' . $extension;
+            $this->attributes[$name . '_url'] = service('file_manager')->getUrl($this->{$name . '_key'});
+            $this->attributes[$name . '_mimetype'] = $mimetype;
         }
 
         return true;
     }
 
-    public function setFile(File $file, ?string $key = null): self
+    public function setFile(File $file): self
     {
-        $this->saveSizes($file);
-
-        parent::setFile($file, $key);
+        parent::setFile($file);
 
         if ($this->file_mimetype === 'image/jpeg' && $metadata = @exif_read_data(
-            media_path($this->file_key),
+            $file->getRealPath(),
             null,
             true
         )) {
@@ -65,9 +76,16 @@ class Image extends BaseMedia
 
         $this->attributes['file_metadata'] = json_encode($metadata, JSON_INVALID_UTF8_IGNORE);
 
-        $this->initFileProperties();
-
         return $this;
+    }
+
+    public function saveFile(): bool
+    {
+        if ($this->attributes['sizes'] !== []) {
+            $this->saveSizes();
+        }
+
+        return parent::saveFile();
     }
 
     public function deleteFile(): bool
@@ -79,16 +97,15 @@ class Image extends BaseMedia
         return false;
     }
 
-    public function saveSizes(File $file): void
+    public function saveSizes(): void
     {
         // save derived sizes
         $imageService = Services::image();
-        foreach ($this->sizes as $name => $size) {
-            $fileName = $file->getRandomName();
-            // dd($fileName, $file->getRealPath());
+        foreach ($this->attributes['sizes'] as $name => $size) {
+            $fileName = (new File(''))->getRandomName();
             $pathProperty = $name . '_key';
             $imageService
-                ->withFile($file->getRealPath())
+                ->withFile($this->attributes['file']->getRealPath())
                 ->resize($size['width'], $size['height'])
                 ->save(WRITEPATH . 'uploads/' . $fileName);
 

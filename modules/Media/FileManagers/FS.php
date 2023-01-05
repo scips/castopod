@@ -20,7 +20,7 @@ class FS implements FileManagerInterface
      */
     public function save(File $file, ?string $path = null): string | false
     {
-        if (($extension = $file->getExtension()) !== '') {
+        if ((pathinfo($path, PATHINFO_EXTENSION) === '') && (($extension = $file->getExtension()) !== '')) {
             $path = $path . '.' . $extension;
         }
 
@@ -59,13 +59,6 @@ class FS implements FileManagerInterface
             $this->config->root .
             '/' .
             $key;
-    }
-
-    public function getRealSize(string $key): int
-    {
-        helper('media');
-
-        return filesize(media_path($key));
     }
 
     public function rename(string $oldKey, string $newKey): bool

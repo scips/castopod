@@ -136,8 +136,15 @@ class MediaModel extends Model
      */
     public function saveMedia(object $media): int | false
     {
+        // save file first
+        if (! $media->saveFile()) {
+            return false;
+        }
+
         // insert record in database
         if (! $mediaId = $this->insert($media, true)) {
+            $this->db->transRollback();
+
             return false;
         }
 

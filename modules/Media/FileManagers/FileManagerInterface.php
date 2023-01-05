@@ -12,8 +12,6 @@ interface FileManagerInterface
 
     public function delete(string $key): bool;
 
-    public function getRealSize(string $key): int;
-
     public function getUrl(string $key): string;
 
     public function rename(string $oldKey, string $newKey): bool;

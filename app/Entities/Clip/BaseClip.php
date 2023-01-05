@@ -132,7 +132,7 @@ class BaseClip extends Entity
 
         if ($this->media_id !== null) {
             $this->getMedia()
-                ->setFile($file);
+                ->setMediaAttributes($file);
             $this->getMedia()
                 ->updated_by = (int) user_id();
             (new MediaModel('audio'))->updateMedia($this->getMedia());
@@ -144,9 +144,9 @@ class BaseClip extends Entity
                 'uploaded_by' => $this->attributes['created_by'],
                 'updated_by' => $this->attributes['created_by'],
             ]);
-            $media->setFile($file);
+            $media->setMediaAttributes($file);
 
-            $this->attributes['media_id'] = (new MediaModel())->saveMedia($media);
+            $this->attributes['media_id'] = (new MediaModel())->save($media);
         }
 
         return $this;

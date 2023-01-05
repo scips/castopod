@@ -15,20 +15,20 @@ use Media\TranscriptParser;
 
 class Transcript extends BaseMedia
 {
-    public ?string $json_path = null;
+    public ?string $json_key = null;
 
     public ?string $json_url = null;
 
     protected string $type = 'transcript';
 
-    public function initFileProperties(): void
+    public function __construct(?array $data = null)
     {
-        parent::initFileProperties();
+        parent::__construct($data);
 
         if ($this->file_key && $this->file_metadata && array_key_exists('json_path', $this->file_metadata)) {
             helper('media');
 
-            $this->json_path = media_path($this->file_metadata['json_path']);
+            $this->json_key = media_path($this->file_metadata['json_path']);
             $this->json_url = service('media')
                 ->getFileUrl($this->file_metadata['json_path']);
         }
@@ -38,27 +38,27 @@ class Transcript extends BaseMedia
     {
         parent::setFile($file);
 
-        $content = file_get_contents(media_path($this->attributes['file_key']));
-
-        if ($content === false) {
-            return $this;
-        }
-
         $metadata = lstat((string) $file) ?? [];
 
-        $transcriptParser = new TranscriptParser();
-        $jsonfileKey = $this->attributes['file_directory'] . '/' . $this->attributes['file_name'] . '.json';
-        if (($transcriptJson = $transcriptParser->loadString($content)->parseSrt()) && file_put_contents(
-            media_path($jsonfileKey),
-            $transcriptJson
-        )) {
-            // set metadata (generated json file path)
-            $metadata['json_path'] = $jsonfileKey;
-        }
+        helper('filesystem');
+
+        $fileKeyWithoutExt = path_without_ext($this->file_key);
+
+        $jsonfileKey = $fileKeyWithoutExt . '.json';
+
+        // set metadata (generated json file path)
+        $metadata['json_path'] = $jsonfileKey;
 
         $this->attributes['file_metadata'] = json_encode($metadata, JSON_INVALID_UTF8_IGNORE);
 
         return $this;
+    }
+
+    public function saveFile(): bool
+    {
+        $this->saveJsonTranscript();
+
+        return parent::saveFile();
     }
 
     public function deleteFile(): bool
@@ -67,9 +67,34 @@ class Transcript extends BaseMedia
             return false;
         }
 
-        if ($this->json_path) {
-            return unlink($this->json_path);
+        if ($this->json_key) {
+            return service('file_manager')->delete($this->json_key);
         }
+
+        return true;
+    }
+
+    private function saveJsonTranscript(): bool
+    {
+        $srtContent = file_get_contents($this->file->getRealPath());
+
+        $transcriptParser = new TranscriptParser();
+
+        if ($srtContent === false) {
+            return false;
+        }
+
+        if (! $transcriptJson = $transcriptParser->loadString($srtContent)->parseSrt()) {
+            return false;
+        }
+
+        $fileName = $this->file->getRandomName();
+        file_put_contents(WRITEPATH . 'uploads/' . $fileName, $transcriptJson);
+
+        $newTranscriptJson = new File(WRITEPATH . 'uploads/' . $fileName, true);
+
+        service('file_manager')
+            ->save($newTranscriptJson, $this->attributes['json_path']);
 
         return true;
     }

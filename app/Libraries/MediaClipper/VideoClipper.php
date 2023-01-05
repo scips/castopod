@@ -120,8 +120,8 @@ class VideoClipper
             throw new Exception('Episode does not have a transcript!');
         }
 
-        if ($this->episode->transcript->json_path) {
-            $this->generateSubtitlesClipFromJson($this->episode->transcript->json_path);
+        if ($this->episode->transcript->json_url) {
+            $this->generateSubtitlesClipFromJson($this->episode->transcript->json_url);
         } else {
             $subtitlesInput = media_path($this->episode->transcript->file_key);
             $subtitleClipCmd = "ffmpeg -y -i {$subtitlesInput} -ss {$this->start} -t {$this->duration} {$this->subtitlesClipOutput}";

@@ -78,15 +78,15 @@ class VideoClip extends BaseClip
         $file = new File(media_path($fileKey));
 
         $video = new Video([
+            'file' => $file,
             'file_key' => $fileKey,
             'language_code' => $this->getPodcast()
                 ->language_code,
             'uploaded_by' => $this->attributes['created_by'],
             'updated_by' => $this->attributes['created_by'],
         ]);
-        $video->setFile($file);
 
-        $this->attributes['media_id'] = (new MediaModel())->saveMedia($video);
+        $this->attributes['media_id'] = (new MediaModel())->save($video);
 
         return $this;
     }

@@ -70,12 +70,13 @@ class Person extends Entity
             (new MediaModel('image'))->updateMedia($this->getAvatar());
         } else {
             $avatar = new Image([
+                'file' => $file,
+                'file_key' => 'persons/' . $this->attributes['unique_name'],
                 'sizes' => config('Images')
                     ->personAvatarSizes,
                 'uploaded_by' => user_id(),
                 'updated_by' => user_id(),
             ]);
-            $avatar->setFile($file, 'persons/' . $this->attributes['unique_name']);
 
             $this->attributes['avatar_id'] = (new MediaModel('image'))->saveMedia($avatar);
         }

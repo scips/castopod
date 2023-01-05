@@ -60,11 +60,6 @@ class S3 implements FileManagerInterface
         return '';
     }
 
-    public function getRealSize(string $key): int
-    {
-        return 0;
-    }
-
     public function rename(string $oldKey, string $newKey): bool
     {
         try {

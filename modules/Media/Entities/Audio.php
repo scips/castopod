@@ -34,12 +34,12 @@ class Audio extends BaseMedia
         }
     }
 
-    public function setFile(File $file, ?string $key = null): self
+    public function setFile(File $file): self
     {
-        parent::setFile($file, $key);
+        parent::setFile($file);
 
         $getID3 = new GetID3();
-        $audioMetadata = $getID3->analyze(media_path($this->file_key));
+        $audioMetadata = $getID3->analyze($file->getRealPath());
 
         // remove heavy image data from metadata
         unset($audioMetadata['comments']['picture']);
