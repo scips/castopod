@@ -243,12 +243,13 @@ class Podcast extends Entity
             (new MediaModel('image'))->updateMedia($this->getCover());
         } else {
             $cover = new Image([
+                'file_key' => 'podcasts/' . $this->attributes['handle'] . '/cover',
                 'sizes' => config('Images')
-                    ->podcastCoverSizes,
+->podcastCoverSizes,
                 'uploaded_by' => user_id(),
                 'updated_by' => user_id(),
             ]);
-            $cover->setMediaAttributes($file, 'podcasts/' . $this->attributes['handle'] . '/cover');
+            $cover->setFile($file);
 
             $this->attributes['cover_id'] = (new MediaModel('image'))->saveMedia($cover);
         }

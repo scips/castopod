@@ -63,15 +63,17 @@ class HomeController extends BaseController
         helper('text');
 
         $image = new Image([
-            'file' => $file,
             'file_key' => 'podcasts/hello/' . random_string() . '.jpg',
             'sizes' => config('Images')
-                ->podcastCoverSizes,
+->podcastCoverSizes,
             'uploaded_by' => 1,
             'updated_by' => 1,
         ]);
+        $image->setFile($file);
 
         $imageId = (new MediaModel('Image'))->saveMedia($image);
+
+        dd($imageId);
 
         return redirect()->back();
     }

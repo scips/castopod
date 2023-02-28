@@ -19,6 +19,9 @@ use Modules\Media\Models\MediaModel;
  * @property int $id
  * @property string $file_key
  * @property string $file_url
+ * @property string $file_name
+ * @property string $file_directory
+ * @property string $file_extension
  * @property int $file_size
  * @property string $file_mimetype
  * @property array|null $file_metadata
@@ -42,7 +45,6 @@ class BaseMedia extends Entity
      */
     protected $casts = [
         'id' => 'integer',
-        'file_extension' => 'string',
         'file_key' => 'string',
         'file_size' => 'int',
         'file_mimetype' => 'string',
@@ -59,9 +61,27 @@ class BaseMedia extends Entity
      */
     public function __construct(array $data = null)
     {
-        $data['file_url'] = service('file_manager')->getUrl($data['file_key']);
-
         parent::__construct($data);
+
+        $this->initFileProperties();
+    }
+
+    public function initFileProperties(): void
+    {
+        if ($this->file_key !== '') {
+            helper('media');
+
+            [
+                'filename' => $filename,
+                'dirname' => $dirname,
+                'extension' => $extension,
+            ] = pathinfo($this->file_key);
+
+            $this->attributes['file_url'] = service('file_manager')->getUrl($this->file_key);
+            $this->attributes['file_name'] = $filename;
+            $this->attributes['file_directory'] = $dirname;
+            $this->attributes['file_extension'] = $extension;
+        }
     }
 
     public function setFile(File $file): self

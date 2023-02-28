@@ -10,8 +10,9 @@ use Modules\Media\Config\Media as MediaConfig;
 
 class FS implements FileManagerInterface
 {
-    public function __construct(protected MediaConfig $config)
-    {
+    public function __construct(
+        protected MediaConfig $config
+    ) {
         $this->config = $config;
     }
 
@@ -37,7 +38,7 @@ class FS implements FileManagerInterface
         try {
             // move to media folder, overwrite file if already existing
             $file->move($mediaRoot . '/', $path, true);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
 

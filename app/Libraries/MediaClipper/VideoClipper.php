@@ -35,7 +35,7 @@ class VideoClipper
 
     public bool $error = false;
 
-    public string $videoClipfileKey;
+    public string $videoClipFileKey;
 
     protected string $videoClipOutput;
 
@@ -91,7 +91,7 @@ class VideoClipper
         $podcastFolder = media_path("podcasts/{$this->episode->podcast->handle}");
 
         $this->videoClipOutput = $podcastFolder . "/{$this->episode->slug}-clip-{$this->start}-to-{$this->end}-{$this->format}-{$this->theme}.mp4";
-        $this->videoClipfileKey = "podcasts/{$this->episode->podcast->handle}/{$this->episode->slug}-clip-{$this->start}-to-{$this->end}-{$this->format}-{$this->theme}.mp4";
+        $this->videoClipFileKey = "podcasts/{$this->episode->podcast->handle}/{$this->episode->slug}-clip-{$this->start}-to-{$this->end}-{$this->format}-{$this->theme}.mp4";
 
         // Temporary files to generate clip
         $tempFile = tempnam(WRITEPATH . 'temp', "{$this->episode->slug}-{$this->start}-{$this->end}");

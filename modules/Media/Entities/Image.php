@@ -29,9 +29,8 @@ class Image extends BaseMedia
     {
         parent::__construct($data);
 
-        // dd($this->file_key, $this->sizes, $this->attributes, $data);
-
-        if ($this->file_key && $this->attributes['sizes']) {
+        if ($this->file_key !== '' && $this->file_metadata) {
+            $this->sizes = $this->file_metadata['sizes'];
             $this->initSizeProperties();
         }
     }
@@ -43,15 +42,12 @@ class Image extends BaseMedia
         $fileKeyWithoutExt = path_without_ext($this->file_key);
 
         foreach ($this->attributes['sizes'] as $name => $size) {
-            $extension = array_key_exists(
-                'extension',
-                $size
-            ) ? $size['extension'] : $this->attributes['file']->getExtension();
+            $extension = array_key_exists('extension', $size) ? $size['extension'] : $this->file_extension;
             $mimetype = array_key_exists('mimetype', $size) ? $size['mimetype'] : $this->file_mimetype;
 
-            $this->attributes[$name . '_key'] = $fileKeyWithoutExt . '_' . $name . '.' . $extension;
-            $this->attributes[$name . '_url'] = service('file_manager')->getUrl($this->{$name . '_key'});
-            $this->attributes[$name . '_mimetype'] = $mimetype;
+            $this->{$name . '_key'} = $fileKeyWithoutExt . '_' . $name . '.' . $extension;
+            $this->{$name . '_url'} = service('file_manager')->getUrl($this->{$name . '_key'});
+            $this->{$name . '_mimetype'} = $mimetype;
         }
 
         return true;

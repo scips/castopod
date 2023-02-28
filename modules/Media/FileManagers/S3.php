@@ -14,8 +14,9 @@ class S3 implements FileManagerInterface
 {
     public S3Client $s3;
 
-    public function __construct(protected MediaConfig $config)
-    {
+    public function __construct(
+        protected MediaConfig $config
+    ) {
         $this->s3 = new S3Client([
             'version' => 'latest',
             'region' => $config->s3['region'],
@@ -29,16 +30,14 @@ class S3 implements FileManagerInterface
     public function save(File $file, ?string $key): string|false
     {
         try {
-            $this->s3->createBucket([
-                'Bucket' => 'default',
-            ]);
             $this->s3->putObject([
-                'Bucket' => 'default',
+                'Bucket' => 'castopod',
                 'Key' => $key,
                 'SourceFile' => $file,
             ]);
-        } catch (Exception $e) {
-            dd($e, $e->getMessage());
+        } catch (Exception $exception) {
+            dd($exception, $exception->getMessage());
+            return false;
         }
 
         return $key;
