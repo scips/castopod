@@ -25,11 +25,14 @@ class Image extends BaseMedia
      */
     protected array $sizes = [];
 
-    public function __construct(?array $data = null)
+    public function initFileProperties(): void
     {
-        parent::__construct($data);
+        parent::initFileProperties();
 
-        if ($this->file_key !== '' && $this->file_metadata) {
+        if ($this->file_path !== '' && $this->file_metadata !== null && array_key_exists(
+            'sizes',
+            $this->file_metadata
+        )) {
             $this->sizes = $this->file_metadata['sizes'];
             $this->initSizeProperties();
         }
@@ -62,11 +65,11 @@ class Image extends BaseMedia
             null,
             true
         )) {
-            $metadata['sizes'] = $this->sizes;
+            $metadata['sizes'] = $this->attributes['sizes'];
             $this->attributes['file_size'] = $metadata['FILE']['FileSize'];
         } else {
             $metadata = [
-                'sizes' => $this->sizes,
+                'sizes' => $this->attributes['sizes'],
             ];
         }
 
@@ -78,6 +81,7 @@ class Image extends BaseMedia
     public function saveFile(): bool
     {
         if ($this->attributes['sizes'] !== []) {
+            $this->initFileProperties();
             $this->saveSizes();
         }
 
