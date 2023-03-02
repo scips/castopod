@@ -20,12 +20,17 @@ class Media extends BaseConfig
         's3' => S3::class,
     ];
 
+    /**
+     * @var array<string, null|string|bool>
+     */
     public array $s3 = [
-        'key' => '',
-        'secret' => '',
+        'bucket' => 'castopod',
+        'key' => null,
+        'secret' => null,
         'region' => '',
-        'protocol' => '',
-        'endpoint' => '',
+        'protocol' => null,
+        'endpoint' => null,
+        'retrievalEndpoint' => null,
         'debug' => false,
         'path_style_endpoint' => false,
     ];

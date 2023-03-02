@@ -69,7 +69,13 @@ $routes->get('/', 'HomeController', [
 $routes->get('/testings3', 'HomeController::testings3', [
     'as' => 'testings3',
 ]);
+$routes->get('/testings3-delete', 'HomeController::testings3Delete', [
+    'as' => 'testings3-delete',
+]);
 $routes->post('/testings3', 'HomeController::testings3Action');
+$routes->post('/testings3-audio', 'HomeController::testings3Audio', [
+    'as' => 'testings3-audio',
+]);
 
 $routes->get('.well-known/platforms', 'Platform');
 

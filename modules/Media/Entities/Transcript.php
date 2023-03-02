@@ -28,9 +28,9 @@ class Transcript extends BaseMedia
         if ($this->file_key && $this->file_metadata && array_key_exists('json_path', $this->file_metadata)) {
             helper('media');
 
-            $this->json_key = media_path($this->file_metadata['json_path']);
-            $this->json_url = service('media')
-                ->getFileUrl($this->file_metadata['json_path']);
+            $this->json_key = $this->file_metadata['json_key'];
+            $this->json_url = service('file_manager')
+                ->getUrl($this->json_key);
         }
     }
 
@@ -47,7 +47,7 @@ class Transcript extends BaseMedia
         $jsonfileKey = $fileKeyWithoutExt . '.json';
 
         // set metadata (generated json file path)
-        $metadata['json_path'] = $jsonfileKey;
+        $metadata['json_key'] = $jsonfileKey;
 
         $this->attributes['file_metadata'] = json_encode($metadata, JSON_INVALID_UTF8_IGNORE);
 
@@ -88,13 +88,16 @@ class Transcript extends BaseMedia
             return false;
         }
 
-        $fileName = $this->file->getRandomName();
-        file_put_contents(WRITEPATH . 'uploads/' . $fileName, $transcriptJson);
+        $tempFilePath = WRITEPATH . 'uploads/' . $this->file->getRandomName();
+        file_put_contents($tempFilePath, $transcriptJson);
 
-        $newTranscriptJson = new File(WRITEPATH . 'uploads/' . $fileName, true);
+        $newTranscriptJson = new File($tempFilePath, true);
 
         service('file_manager')
             ->save($newTranscriptJson, $this->attributes['json_path']);
+
+        // delete temp file
+        unlink($tempFilePath);
 
         return true;
     }

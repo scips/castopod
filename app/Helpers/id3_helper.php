@@ -29,7 +29,7 @@ if (! function_exists('write_audio_file_tags')) {
         $tagwriter->tagformats = ['id3v2.4'];
         $tagwriter->tag_encoding = $TextEncoding;
 
-        $APICdata = file_get_contents(media_path($episode->cover->id3_key));
+        $APICdata = file_get_contents($episode->cover->id3_url);
 
         // TODO: variables used for podcast specific tags
         // $podcastUrl = $episode->podcast->link;

@@ -15,7 +15,6 @@ use CodeIgniter\Database\ConnectionInterface;
 use CodeIgniter\Model;
 use CodeIgniter\Validation\ValidationInterface;
 use Modules\Media\Entities\Audio;
-use Modules\Media\Entities\BaseMedia;
 use Modules\Media\Entities\Chapters;
 use Modules\Media\Entities\Document;
 use Modules\Media\Entities\Image;
@@ -87,26 +86,14 @@ class MediaModel extends Model
         ConnectionInterface &$db = null,
         ValidationInterface $validation = null
     ) {
-        switch ($fileType) {
-            case 'audio':
-                $this->returnType = Audio::class;
-                break;
-            case 'video':
-                $this->returnType = Video::class;
-                break;
-            case 'image':
-                $this->returnType = Image::class;
-                break;
-            case 'transcript':
-                $this->returnType = Transcript::class;
-                break;
-            case 'chapters':
-                $this->returnType = Chapters::class;
-                break;
-            default:
-                // do nothing, keep Document class as default
-                break;
-        }
+        $this->returnType = match ($fileType) {
+            'audio' => Audio::class,
+            'video' => Video::class,
+            'image' => Image::class,
+            'transcript' => Transcript::class,
+            'chapters' => Chapters::class,
+            default => Document::class
+        };
 
         parent::__construct($db, $validation);
     }
@@ -174,9 +161,14 @@ class MediaModel extends Model
         return $result;
     }
 
-    public function deleteMedia(BaseMedia $media): bool|BaseResult
+    /**
+     * @param Document|Audio|Video|Image|Transcript|Chapters $media
+     */
+    public function deleteMedia($media): bool|BaseResult
     {
-        service('file_handler')->delete($media->file_key);
+        if (! $media->deleteFile()) {
+            return false;
+        }
 
         return $this->delete($media->id);
     }

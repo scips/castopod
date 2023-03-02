@@ -29,7 +29,7 @@ class Image extends BaseMedia
     {
         parent::initFileProperties();
 
-        if ($this->file_path !== '' && $this->file_metadata !== null && array_key_exists(
+        if ($this->file_key !== '' && $this->file_metadata !== null && array_key_exists(
             'sizes',
             $this->file_metadata
         )) {
@@ -44,7 +44,7 @@ class Image extends BaseMedia
 
         $fileKeyWithoutExt = path_without_ext($this->file_key);
 
-        foreach ($this->attributes['sizes'] as $name => $size) {
+        foreach ($this->sizes as $name => $size) {
             $extension = array_key_exists('extension', $size) ? $size['extension'] : $this->file_extension;
             $mimetype = array_key_exists('mimetype', $size) ? $size['mimetype'] : $this->file_mimetype;
 
@@ -54,6 +54,26 @@ class Image extends BaseMedia
         }
 
         return true;
+    }
+
+    /**
+     * @param array<string, string> $data
+     */
+    public function setAttributes(array $data): self
+    {
+        parent::setAttributes($data);
+
+        if ($this->attributes === []) {
+            return $this;
+        }
+
+        if ($this->file_metadata !== [] && array_key_exists('sizes', $this->file_metadata)) {
+            $this->sizes = $this->file_metadata['sizes'];
+            $this->initFileProperties();
+            $this->initSizeProperties();
+        }
+
+        return $this;
     }
 
     public function setFile(File $file): self
@@ -102,17 +122,20 @@ class Image extends BaseMedia
         // save derived sizes
         $imageService = Services::image();
         foreach ($this->attributes['sizes'] as $name => $size) {
-            $fileName = (new File(''))->getRandomName();
+            $tempFilePath = tempnam(WRITEPATH . 'temp/', 'img_');
             $pathProperty = $name . '_key';
             $imageService
                 ->withFile($this->attributes['file']->getRealPath())
                 ->resize($size['width'], $size['height'])
-                ->save(WRITEPATH . 'uploads/' . $fileName);
+                ->save($tempFilePath);
 
-            $newImage = new File(WRITEPATH . 'uploads/' . $fileName, true);
+            $newImage = new File($tempFilePath, true);
 
             service('file_manager')
                 ->save($newImage, $this->{$pathProperty});
+
+            // delete temporary file
+            unlink($tempFilePath);
         }
     }
 
@@ -120,7 +143,7 @@ class Image extends BaseMedia
     {
         // delete all derived sizes
         foreach (array_keys($this->sizes) as $name) {
-            $pathProperty = $name . '_path';
+            $pathProperty = $name . '_key';
 
             if (! service('file_manager')->delete($this->{$pathProperty})) {
                 return false;

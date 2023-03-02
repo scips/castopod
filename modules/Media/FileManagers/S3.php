@@ -7,6 +7,7 @@ namespace Modules\Media\FileManagers;
 use Aws\Credentials\Credentials;
 use Aws\S3\S3Client;
 use CodeIgniter\Files\File;
+use CodeIgniter\HTTP\URI;
 use Exception;
 use Modules\Media\Config\Media as MediaConfig;
 
@@ -31,12 +32,12 @@ class S3 implements FileManagerInterface
     {
         try {
             $this->s3->putObject([
-                'Bucket' => 'castopod',
+                'Bucket' => $this->config->s3['bucket'],
                 'Key' => $key,
                 'SourceFile' => $file,
             ]);
         } catch (Exception $exception) {
-            dd($exception, $exception->getMessage());
+            dd($file->getRealPath(), $exception, $exception->getMessage());
             return false;
         }
 
@@ -45,18 +46,35 @@ class S3 implements FileManagerInterface
 
     public function delete(string $key): bool
     {
-        $this->s3->deleteObject([
-            'Bucket' => 'default',
-            'Key' => $key,
-        ]);
+        try {
+            $this->s3->deleteObject([
+                'Bucket' => $this->config->s3['bucket'],
+                'Key' => $key,
+            ]);
+        } catch (Exception $exception) {
+            dd($exception, $exception->getMessage());
+            return false;
+        }
 
         return true;
     }
 
     public function getUrl(string $key): string
     {
-        // TODO:
-        return '';
+        if ($this->config->s3['retrievalEndpoint'] === null) {
+            $url = new URI($this->config->s3['endpoint']);
+        } else {
+            $url = new URI($this->config->s3['retrievalEndpoint']);
+        }
+
+        if ($this->config->s3['path_style_endpoint'] === true) {
+            $url->setPath($this->config->s3['bucket'] . '/' . $key);
+            return (string) $url;
+        }
+
+        $url->setHost($this->config->s3['bucket'] . '.' . $url->getHost());
+        $url->setPath($key);
+        return (string) $url;
     }
 
     public function rename(string $oldKey, string $newKey): bool
@@ -64,7 +82,7 @@ class S3 implements FileManagerInterface
         try {
             // copy old object with new key
             $this->s3->copyObject([
-                'Bucket' => 'default',
+                'Bucket' => $this->config->s3['bucket'],
                 'CopySource' => $oldKey,
                 'Key' => $newKey,
             ]);

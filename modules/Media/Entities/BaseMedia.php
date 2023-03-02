@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace Modules\Media\Entities;
 
-use CodeIgniter\Database\BaseResult;
 use CodeIgniter\Entity\Entity;
 use CodeIgniter\Files\File;
 use Modules\Media\Models\MediaModel;
@@ -69,8 +68,6 @@ class BaseMedia extends Entity
     public function initFileProperties(): void
     {
         if ($this->file_key !== '') {
-            helper('media');
-
             [
                 'filename' => $filename,
                 'dirname' => $dirname,
@@ -113,12 +110,6 @@ class BaseMedia extends Entity
     public function deleteFile(): bool
     {
         return service('file_manager')->delete($this->file_key);
-    }
-
-    public function delete(): bool|BaseResult
-    {
-        $mediaModel = new MediaModel();
-        return $mediaModel->delete($this->id);
     }
 
     public function rename(): bool
