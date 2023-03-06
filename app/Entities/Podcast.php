@@ -283,7 +283,7 @@ class Podcast extends Entity
                 'file' => $file,
                 'file_key' => 'podcasts/' . $this->attributes['handle'] . '/banner.' . $file->getExtension(),
                 'sizes' => config('Images')
-                    ->podcastBannerSizes,
+->podcastBannerSizes,
                 'uploaded_by' => user_id(),
                 'updated_by' => user_id(),
             ]);
@@ -308,7 +308,7 @@ class Podcast extends Entity
                 'file_size' => 0,
                 'file_metadata' => [
                     'sizes' => config('Images')
-                        ->podcastBannerSizes,
+->podcastBannerSizes,
                 ],
             ]);
         }
