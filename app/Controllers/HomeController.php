@@ -72,7 +72,7 @@ class HomeController extends BaseController
         ]);
         $image->setFile($file);
 
-        $imageId = (new MediaModel('image'))->saveMedia($image);
+        (new MediaModel('image'))->saveMedia($image);
 
         return redirect()->back();
     }
@@ -92,18 +92,17 @@ class HomeController extends BaseController
         ]);
         $audio->setFile($file);
 
-        $audioId = (new MediaModel('audio'))->saveMedia($audio);
+        (new MediaModel('audio'))->saveMedia($audio);
 
         return redirect()->back();
     }
 
     public function testings3Delete(): RedirectResponse
     {
-        /** @var ?Image */
         $image = (new MediaModel('image'))->where('type', 'image')
             ->first();
 
-        if (! $image) {
+        if (! $image instanceof Image) {
             return redirect()->back()
                 ->with('error', 'NO IMAGE');
         }
