@@ -25,12 +25,11 @@ class Media extends BaseConfig
      */
     public array $s3 = [
         'bucket' => 'castopod',
-        'key' => null,
-        'secret' => null,
+        'key' => '',
+        'secret' => '',
         'region' => '',
-        'protocol' => null,
-        'endpoint' => null,
-        'retrievalEndpoint' => null,
+        'protocol' => '',
+        'endpoint' => '',
         'debug' => false,
         'path_style_endpoint' => false,
     ];

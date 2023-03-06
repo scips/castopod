@@ -61,11 +61,7 @@ class S3 implements FileManagerInterface
 
     public function getUrl(string $key): string
     {
-        if ($this->config->s3['retrievalEndpoint'] === null) {
-            $url = new URI($this->config->s3['endpoint']);
-        } else {
-            $url = new URI($this->config->s3['retrievalEndpoint']);
-        }
+        $url = new URI((string) $this->config->s3['endpoint']);
 
         if ($this->config->s3['path_style_endpoint'] === true) {
             $url->setPath($this->config->s3['bucket'] . '/' . $key);

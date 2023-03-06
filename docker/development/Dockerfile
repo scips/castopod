@@ -25,6 +25,8 @@ RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
     cron \
     # unzip used by composer
     unzip \
+    # dnsutils for dig
+    dnsutils \
     # required libraries to install php extensions using
     # https://github.com/mlocati/docker-php-extension-installer (included in php's docker image)
     libicu-dev \
