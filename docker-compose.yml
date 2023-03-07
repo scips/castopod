@@ -1,7 +1,4 @@
-version: "3"
-
-networks:
-  castopod:
+version: "3.8"
 
 services:
   app:
@@ -17,8 +14,6 @@ services:
     depends_on:
       - redis
       - mariadb
-    networks:
-      - castopod
 
   redis:
     image: redis:alpine
@@ -27,8 +22,6 @@ services:
       - 6379:6379
     volumes:
       - redis:/data
-    networks:
-      - castopod
 
   mariadb:
     image: mariadb:10.2
@@ -43,8 +36,6 @@ services:
       MYSQL_DATABASE: castopod
       MYSQL_USER: castopod
       MYSQL_PASSWORD: castopod
-    networks:
-      - castopod
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
@@ -58,8 +49,6 @@ services:
       - phpmyadmin:/sessions
     depends_on:
       - mariadb
-    networks:
-      - castopod
 
   s3:
     image: adobe/s3mock:latest
@@ -72,8 +61,6 @@ services:
       - 9090:9090
     volumes:
       - ./data/s3:/data:cached
-    networks:
-      - castopod
 
 volumes:
   redis:
