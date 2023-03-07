@@ -124,9 +124,6 @@ class InstallController extends Controller
                 // if so, show a 404 page
                 throw PageNotFoundException::forPageNotFound();
             }
-
-            // if so, show a 404 page
-            throw PageNotFoundException::forPageNotFound();
         } catch (DatabaseException) {
             // Could not connect to the database
             // show database config view to fix value
@@ -135,6 +132,14 @@ class InstallController extends Controller
 
             return $this->databaseConfig();
         }
+
+        // migrate if no user has been created
+        $this->migrate();
+
+        // Check if all seeds have succeeded
+        $this->seed();
+
+        return $this->createSuperAdmin();
     }
 
     public function instanceConfig(): string
