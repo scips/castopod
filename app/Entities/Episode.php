@@ -277,13 +277,13 @@ class Episode extends Entity
             (new MediaModel('transcript'))->updateMedia($this->getTranscript());
         } else {
             $transcript = new Transcript([
-                'file' => $file,
-                'file_key' => 'podcasts/' . $this->getPodcast()->handle . '/' . $this->attributes['slug'] . '-transcript',
+                'file_key' => 'podcasts/' . $this->getPodcast()->handle . '/' . $this->attributes['slug'] . '-transcript.' . $file->getExtension(),
                 'language_code' => $this->getPodcast()
-                    ->language_code,
+->language_code,
                 'uploaded_by' => user_id(),
                 'updated_by' => user_id(),
             ]);
+            $transcript->setFile($file);
 
             $this->attributes['transcript_id'] = (new MediaModel('transcript'))->saveMedia($transcript);
         }

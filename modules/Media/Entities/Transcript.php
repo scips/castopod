@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace Modules\Media\Entities;
 
 use CodeIgniter\Files\File;
-use Media\TranscriptParser;
+use Modules\Media\TranscriptParser;
 
 class Transcript extends BaseMedia
 {
@@ -47,9 +47,12 @@ class Transcript extends BaseMedia
         $jsonfileKey = $fileKeyWithoutExt . '.json';
 
         // set metadata (generated json file path)
-        $metadata['json_key'] = $jsonfileKey;
+        $this->attributes['json_key'] = $jsonfileKey;
+        $metadata['json_key'] = $this->json_key;
 
         $this->attributes['file_metadata'] = json_encode($metadata, JSON_INVALID_UTF8_IGNORE);
+
+        $this->file = $file;
 
         return $this;
     }
@@ -94,7 +97,7 @@ class Transcript extends BaseMedia
         $newTranscriptJson = new File($tempFilePath, true);
 
         service('file_manager')
-            ->save($newTranscriptJson, $this->attributes['json_path']);
+            ->save($newTranscriptJson, $this->attributes['json_key']);
 
         // delete temp file
         unlink($tempFilePath);

@@ -122,14 +122,8 @@ class BaseClip extends Entity
         return (new UserModel())->find($this->created_by);
     }
 
-    public function setMedia(string $fileKey = null): static
+    public function setMedia(File $file, string $fileKey): static
     {
-        if ($fileKey === null) {
-            return $this;
-        }
-
-        $file = new File($fileKey);
-
         if ($this->media_id !== null) {
             $this->getMedia()
                 ->setFile($file);
@@ -146,7 +140,7 @@ class BaseClip extends Entity
             ]);
             $media->setFile($file);
 
-            $this->attributes['media_id'] = (new MediaModel())->save($media);
+            $this->attributes['media_id'] = (new MediaModel())->saveMedia($media);
         }
 
         return $this;

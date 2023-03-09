@@ -63,30 +63,23 @@ class VideoClip extends BaseClip
         return $this;
     }
 
-    public function setMedia(string $fileKey = null): static
+    public function setMedia(File $file, string $fileKey): static
     {
-        if ($fileKey === null) {
-            return $this;
-        }
-
         if ($this->attributes['media_id'] !== null) {
             // media is already set, do nothing
             return $this;
         }
 
-        helper('media');
-        $file = new File(media_path($fileKey));
-
         $video = new Video([
-            'file' => $file,
             'file_key' => $fileKey,
             'language_code' => $this->getPodcast()
-                ->language_code,
+->language_code,
             'uploaded_by' => $this->attributes['created_by'],
             'updated_by' => $this->attributes['created_by'],
         ]);
+        $video->setFile($file);
 
-        $this->attributes['media_id'] = (new MediaModel())->save($video);
+        $this->attributes['media_id'] = (new MediaModel('video'))->saveMedia($video);
 
         return $this;
     }
