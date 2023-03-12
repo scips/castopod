@@ -23,7 +23,7 @@ if (! function_exists('write_audio_file_tags')) {
 
         // Initialize getID3 tag-writing module
         $tagwriter = new WriteTags();
-        $tagwriter->filename = media_path($episode->audio->file_key);
+        $tagwriter->filename = $episode->audio->file_name;
 
         // set various options (optional)
         $tagwriter->tagformats = ['id3v2.4'];

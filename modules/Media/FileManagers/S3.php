@@ -22,13 +22,20 @@ class S3 implements FileManagerInterface
             'version' => 'latest',
             'region' => $config->s3['region'],
             'endpoint' => $config->s3['endpoint'],
-            'credentials' => new Credentials($config->s3['key'], $config->s3['secret']),
+            'credentials' => new Credentials((string) $config->s3['key'], (string) $config->s3['secret']),
             'debug' => $config->s3['debug'],
             'use_path_style_endpoint' => $config->s3['path_style_endpoint'],
         ]);
+
+        // create bucket if it does not already exist
+        if (! $this->s3->doesBucketExist((string) $this->config->s3['bucket'])) {
+            $this->s3->createBucket([
+                'Bucket' => $this->config->s3['bucket'],
+            ]);
+        }
     }
 
-    public function save(File $file, ?string $key): string|false
+    public function save(File $file, string $key): string|false
     {
         try {
             $this->s3->putObject([
@@ -36,8 +43,7 @@ class S3 implements FileManagerInterface
                 'Key' => $key,
                 'SourceFile' => $file,
             ]);
-        } catch (Exception $exception) {
-            dd($file->getRealPath(), $exception, $exception->getMessage());
+        } catch (Exception) {
             return false;
         }
 
@@ -51,8 +57,7 @@ class S3 implements FileManagerInterface
                 'Bucket' => $this->config->s3['bucket'],
                 'Key' => $key,
             ]);
-        } catch (Exception $exception) {
-            dd($exception, $exception->getMessage());
+        } catch (Exception) {
             return false;
         }
 
@@ -79,7 +84,7 @@ class S3 implements FileManagerInterface
             // copy old object with new key
             $this->s3->copyObject([
                 'Bucket' => $this->config->s3['bucket'],
-                'CopySource' => $oldKey,
+                'CopySource' => $this->config->s3['bucket'] . '/' . $oldKey,
                 'Key' => $newKey,
             ]);
         } catch (Exception) {
@@ -88,5 +93,60 @@ class S3 implements FileManagerInterface
 
         // delete old object
         return $this->delete($oldKey);
+    }
+
+    public function deletePodcastImageSizes(string $podcastHandle): bool
+    {
+        $results = $this->s3->getPaginator('ListObjectsV2', [
+            'Bucket' => $this->config->s3['bucket'],
+            'Prefix' => 'podcasts/' . $podcastHandle . '/',
+        ]);
+
+        $keys = [];
+        foreach ($results as $result) {
+            $key = array_map(static function ($object) {
+                return $object['Key'];
+            }, $result['Contents']);
+
+            array_push($keys, ...preg_grep("~^podcasts\/{$podcastHandle}\/.*_.*.\.(jpg|png|webp)$~", $key));
+        }
+
+        $objectsToDelete = array_map(static function ($key): array {
+            return [
+                'Key' => $key,
+            ];
+        }, $keys);
+
+        if ($objectsToDelete === []) {
+            return true;
+        }
+
+        try {
+            $this->s3->deleteObjects([
+                'Bucket' => $this->config->s3['bucket'],
+                'Delete' => [
+                    'Objects' => $objectsToDelete,
+                ],
+            ]);
+        } catch (Exception) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function deletePersonImagesSizes(): bool
+    {
+        $objects = $this->s3->getIterator('ListObjectsV2', [
+            'Bucket' => $this->config->s3['bucket'],
+            'prefix' => 'persons/',
+        ]);
+
+        $objectsKeys = array_map(static function ($object) {
+            return $object['Key'];
+        }, iterator_to_array($objects));
+
+        $podcastImageKeys = preg_grep("~^persons\/.*_.*.\.(jpg|png|webp)$~", $objectsKeys);
+        return (bool) $podcastImageKeys;
     }
 }

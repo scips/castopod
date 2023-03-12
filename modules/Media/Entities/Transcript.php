@@ -29,7 +29,7 @@ class Transcript extends BaseMedia
             helper('media');
 
             $this->json_key = $this->file_metadata['json_key'];
-            $this->json_url = service('file_manager')
+            $this->json_url = $this->fileManager
                 ->getUrl($this->json_key);
         }
     }
@@ -71,7 +71,7 @@ class Transcript extends BaseMedia
         }
 
         if ($this->json_key) {
-            return service('file_manager')->delete($this->json_key);
+            return $this->fileManager->delete($this->json_key);
         }
 
         return true;
@@ -96,7 +96,7 @@ class Transcript extends BaseMedia
 
         $newTranscriptJson = new File($tempFilePath, true);
 
-        service('file_manager')
+        $this->fileManager
             ->save($newTranscriptJson, $this->attributes['json_key']);
 
         // delete temp file

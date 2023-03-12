@@ -49,7 +49,7 @@ use RuntimeException;
  * @property int $cover_id
  * @property Image $cover
  * @property int|null $banner_id
- * @property Image|null $banner
+ * @property Image $banner
  * @property string $language_code
  * @property int $category_id
  * @property Category|null $category
@@ -310,7 +310,7 @@ class Podcast extends Entity
                     'sizes' => config('Images')
 ->podcastBannerSizes,
                 ],
-            ]);
+            ], 'fs');
         }
 
         if (! $this->banner instanceof Image) {

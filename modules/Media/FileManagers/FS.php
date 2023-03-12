@@ -17,9 +17,9 @@ class FS implements FileManagerInterface
     }
 
     /**
-     * Saves a file to the corresponding podcast folder in `public/media`
+     * Saves a file to the corresponding folder in `public/media`
      */
-    public function save(File $file, ?string $path = null): string | false
+    public function save(File $file, string $path): string | false
     {
         if ((pathinfo($path, PATHINFO_EXTENSION) === '') && (($extension = $file->getExtension()) !== '')) {
             $path = $path . '.' . $extension;
@@ -65,5 +65,39 @@ class FS implements FileManagerInterface
     public function rename(string $oldKey, string $newKey): bool
     {
         return rename($oldKey, $newKey);
+    }
+
+    public function deletePodcastImageSizes(string $podcastHandle): bool
+    {
+        $allPodcastImagesPaths = [];
+        foreach (['jpg', 'png', 'webp'] as $ext) {
+            $images = glob(media_path("/podcasts/{$podcastHandle}/*_*{$ext}"));
+            $allPodcastImagesPaths[] = $images;
+        }
+
+        foreach ($allPodcastImagesPaths as $podcastImagePath) {
+            if (is_file($podcastImagePath)) {
+                unlink($podcastImagePath);
+            }
+        }
+
+        return true;
+    }
+
+    public function deletePersonImagesSizes(): bool
+    {
+        $allPersonsImagesPaths = [];
+        foreach (['jpg', 'png', 'webp'] as $ext) {
+            $images = glob(media_path("/persons/*_*{$ext}"));
+            $allPersonsImagesPaths[] = $images;
+        }
+
+        foreach ($allPersonsImagesPaths as $personImagePath) {
+            if (is_file($personImagePath)) {
+                unlink($personImagePath);
+            }
+        }
+
+        return true;
     }
 }

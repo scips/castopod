@@ -49,7 +49,7 @@ class Image extends BaseMedia
             $mimetype = array_key_exists('mimetype', $size) ? $size['mimetype'] : $this->file_mimetype;
 
             $this->{$name . '_key'} = $fileKeyWithoutExt . '_' . $name . '.' . $extension;
-            $this->{$name . '_url'} = service('file_manager')->getUrl($this->{$name . '_key'});
+            $this->{$name . '_url'} = $this->fileManager->getUrl($this->{$name . '_key'});
             $this->{$name . '_mimetype'} = $mimetype;
         }
 
@@ -119,11 +119,23 @@ class Image extends BaseMedia
 
     public function saveSizes(): void
     {
+        $tempImagePath = '';
+        if (! array_key_exists('file', $this->attributes) && $this->file_url) {
+            // no original file instance set to save sizes from
+
+            // download image temporarily to generate sizes from
+            $tempImagePath = tempnam(WRITEPATH . 'temp', 'img_');
+            $imageContent = file_get_contents($this->file_url);
+            file_put_contents($tempImagePath, $imageContent);
+
+            $this->attributes['file'] = new File($tempImagePath, true);
+        }
+
         // save derived sizes
         $imageService = Services::image();
-        foreach ($this->attributes['sizes'] as $name => $size) {
-            $tempFilePath = tempnam(WRITEPATH . 'temp/', 'img_');
-            $pathProperty = $name . '_key';
+
+        foreach ($this->sizes as $name => $size) {
+            $tempFilePath = tempnam(WRITEPATH . 'temp', 'img_');
             $imageService
                 ->withFile($this->attributes['file']->getRealPath())
                 ->resize($size['width'], $size['height'])
@@ -131,11 +143,15 @@ class Image extends BaseMedia
 
             $newImage = new File($tempFilePath, true);
 
-            service('file_manager')
-                ->save($newImage, $this->{$pathProperty});
+            $this->fileManager
+                ->save($newImage, $this->{$name . '_key'});
 
             // delete temporary file
             unlink($tempFilePath);
+        }
+
+        if ($tempImagePath !== '') {
+            unlink($tempImagePath);
         }
     }
 
@@ -145,7 +161,7 @@ class Image extends BaseMedia
         foreach (array_keys($this->sizes) as $name) {
             $pathProperty = $name . '_key';
 
-            if (! service('file_manager')->delete($this->{$pathProperty})) {
+            if (! $this->fileManager->delete($this->{$pathProperty})) {
                 return false;
             }
         }
