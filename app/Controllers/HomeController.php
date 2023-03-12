@@ -13,9 +13,6 @@ namespace App\Controllers;
 use App\Models\PodcastModel;
 use CodeIgniter\HTTP\RedirectResponse;
 use Config\Services;
-use Modules\Media\Entities\Audio;
-use Modules\Media\Entities\Image;
-use Modules\Media\Models\MediaModel;
 
 class HomeController extends BaseController
 {
@@ -50,65 +47,5 @@ class HomeController extends BaseController
         ];
 
         return view('home', $data);
-    }
-
-    public function testings3(): string
-    {
-        return view('testings3');
-    }
-
-    public function testings3Action(): RedirectResponse
-    {
-        $file = $this->request->getFile('filo');
-
-        helper('text');
-
-        $image = new Image([
-            'file_key' => 'podcasts/hello/' . random_string() . '.jpg',
-            'sizes' => config('Images')
-->podcastCoverSizes,
-            'uploaded_by' => 1,
-            'updated_by' => 1,
-        ]);
-        $image->setFile($file);
-
-        (new MediaModel('image'))->saveMedia($image);
-
-        return redirect()->back();
-    }
-
-    public function testings3Audio(): RedirectResponse
-    {
-        $file = $this->request->getFile('filo');
-
-        helper('text');
-
-        echo '<pre>';
-        $audio = new Audio([
-            'file_key' => 'podcasts/audio/' . random_string() . '.mp3',
-            'language_code' => 'fr',
-            'uploaded_by' => 1,
-            'updated_by' => 1,
-        ]);
-        $audio->setFile($file);
-
-        (new MediaModel('audio'))->saveMedia($audio);
-
-        return redirect()->back();
-    }
-
-    public function testings3Delete(): RedirectResponse
-    {
-        $image = (new MediaModel('image'))->where('type', 'image')
-            ->first();
-
-        if (! $image instanceof Image) {
-            return redirect()->back()
-                ->with('error', 'NO IMAGE');
-        }
-
-        (new MediaModel('image'))->deleteMedia($image);
-
-        return redirect()->back();
     }
 }
