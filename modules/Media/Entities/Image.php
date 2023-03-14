@@ -147,8 +147,10 @@ class Image extends BaseMedia
             $this->fileManager
                 ->save($newImage, $this->{$name . '_key'});
 
-            // delete temporary file
-            unlink($tempFilePath);
+            if (is_file($tempFilePath)) {
+                // delete temporary file
+                unlink($tempFilePath);
+            }
         }
 
         if ($tempImagePath !== '') {

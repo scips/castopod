@@ -74,7 +74,7 @@ to help you kickstart your contribution.
    # -----------------------
    #media.fileManager="s3"
    #media.s3.bucket="castopod"
-   #media.s3.endpoint="http://172.20.0.3:9090/"
+   #media.s3.endpoint="http://172.20.0.6:9090/"
    #media.s3.path_style_endpoint=true
    ```
 
