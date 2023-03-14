@@ -69,7 +69,6 @@ services:
     container_name: castopod_s3
     environment:
       - debug=true
-      - initialBuckets=castopod
       - root=/data
     ports:
       - 9090:9090

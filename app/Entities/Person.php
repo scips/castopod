@@ -98,7 +98,7 @@ class Person extends Entity
                     'sizes' => config('Images')
                         ->personAvatarSizes,
                 ],
-            ]);
+            ], 'fs');
         }
 
         if ($this->avatar === null) {

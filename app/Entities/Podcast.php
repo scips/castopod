@@ -280,7 +280,6 @@ class Podcast extends Entity
             (new MediaModel('image'))->updateMedia($this->getBanner());
         } else {
             $banner = new Image([
-                'file' => $file,
                 'file_key' => 'podcasts/' . $this->attributes['handle'] . '/banner.' . $file->getExtension(),
                 'sizes' => config('Images')
 ->podcastBannerSizes,

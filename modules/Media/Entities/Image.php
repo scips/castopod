@@ -69,6 +69,7 @@ class Image extends BaseMedia
 
         if ($this->file_metadata !== [] && array_key_exists('sizes', $this->file_metadata)) {
             $this->sizes = $this->file_metadata['sizes'];
+            $this->attributes['sizes'] = $this->file_metadata['sizes'];
             $this->initFileProperties();
             $this->initSizeProperties();
         }
